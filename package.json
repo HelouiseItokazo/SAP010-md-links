@@ -4,9 +4,23 @@
   "engines": {
     "node": ">=16.x"
   },
+  "scripts": {
+    "dev": "babel index.js -d dist/bundle.js"
+  },
+  "type": "module",
   "bootcamp": {
     "createdAt": "2023-06-19T12:25:44.680Z",
     "version": "6.3.0",
     "commit": "c17498042fc79734cec390e6314cbe810e95bf4c"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.22.5",
+    "@babel/core": "^7.22.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "@types/node": "^20.3.2"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1"
   }
 }
