@@ -6,53 +6,42 @@ import {
 
 import * as path from 'path';
 
-import * as directoryTree from 'directory-tree';
-
-const isFolder = (fileName) => {
-  return lstatSync(fileName).isDirectory();
+const isFolder = (dirPath) => {
+  return lstatSync(dirPath).isDirectory();
 }
 
 const isDotMd = (fileName) => {
   return path.extname(fileName) === '.md';
 }
 
+const getAllFiles = (dirPath, arrayOfFiles) => {
+  const files = readdirSync(dirPath);
+  files.forEach((file) => {
+    const fullPath = path.join(dirPath, file);
+    if (isFolder(fullPath)) {
+      console.log('cai no if')
+      arrayOfFiles.push(getAllFiles(fullPath, arrayOfFiles));
+    } else {
+      arrayOfFiles.push(fullPath);
+    }
+  });
+  return arrayOfFiles;
+}
+
 const mdLinks = (folderPath) => {
   try {
-    const files = readdirSync(folderPath);
-    const sizeTree = files.length;
+    const directoryTree = getAllFiles(folderPath, []);
     console.log(directoryTree);
-    console.log(`CHILDREN: ${files}`);
-    console.log(`SIZE TREE: ${sizeTree}`);
-    //console.log(`TREE: ${dirTree}`);
-
-    children.forEach((fileName) => {
-      const fullPath = path.join(folderPath, fileName);
-      // Se for outra pasta, leia
-      // Dentro dessa pasta existe outra pasta? Se SIM, leia (repita até não haver mais subdiretórios)
-      // Dentro dessa pasta existe um arquivo .md? Se SIM, leia
-      // Se for um arquivo com extensão .md leia-o
-      /*
-      if (isFolder(fullPath)) {
-        const files = readdirSync(fullPath);
-        console.log(`CHILDREN: ${files}`);
-        children.forEach((a) => {
-          const fullPath2 = path.join(fullPath, a);
-          readFile(fullPath2, 'utf8', (err, data) => {
-            if (err) throw err;
-              console.log(`FILE NAME: ${fileName}`);
-              console.log(`CONTENT: ${data}`);
-              console.log(`FULL PATH: ${fullPath}`);
-          });
-        });
-        //return mdLinks();
-      }
-      */
-      if (isDotMd(fullPath)) {
-        readFile(fullPath, 'utf8', (err, data) => {
-          if (err) throw err;
-          console.log(`FILE NAME: ${fileName}`);
+    const files = directoryTree.filter((doc) => typeof doc === 'string');
+    console.log(files);
+    files.forEach((file) => {
+      console.log(file);
+      console.log(typeof file);
+      if (isDotMd(file)) {
+        readFile(file, 'utf8', (error, data) => {
+          if (error) throw error;
+          console.log(`FILE NAME: ${file}`);
           console.log(`CONTENT: ${data}`);
-          console.log(`FULL PATH: ${fullPath}`);
         });
       }
     });
@@ -62,5 +51,3 @@ const mdLinks = (folderPath) => {
 }
 
 mdLinks('target_dir');
-
-
