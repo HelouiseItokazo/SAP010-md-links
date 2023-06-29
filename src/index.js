@@ -32,20 +32,32 @@ const mdLinks = (folderPath) => {
     const directoryTree = getAllFiles(folderPath, []);
     const files = directoryTree.filter((doc) => typeof doc === 'string');
     const fullLinkOnlyRegex = /\[([^\[]+)\](\(.*\))/gm;
-    console.log(directoryTree);
-    console.log(files);
-    files.forEach((file) => {
-      console.log(file);
-      console.log(typeof file);
-      if (isDotMd(file)) {
-        readFile(file, 'utf8', (error, data) => {
-          if (error) throw error;
-          const matchFullLink = data.match(fullLinkOnlyRegex);
-          console.log(matchFullLink);
-          console.log(`FILE NAME: ${file}`);
-          console.log(`CONTENT: ${data}`);
-        });
-      }
+    return new Promise((resolve, reject) => {
+      files.forEach((file) => {
+        if (isDotMd(file)) {
+          readFile(file, 'utf8', (error, data) => {
+            if (error) {
+              reject(console.log(error.message));
+            } else {
+              const matchFullLink = [...data.matchAll(fullLinkOnlyRegex)];
+              const links = []
+              matchFullLink.forEach((dataFile) => {
+                const text = dataFile[1];
+                const url = dataFile[2].replace(/[\(\)']+/g, '');
+                const objFile = {
+                  file,
+                  text,
+                  url,
+                }
+                links.push(objFile);
+              })
+              for (const data in links) {
+                resolve(console.log(`${links[data].file}  ${links[data].text}  ${links[data].url}`));
+              }
+            }
+          });
+        }
+      })
     });
   } catch (error) {
     console.log(error.message);
