@@ -15,24 +15,23 @@ const isDotMd = (fileName) => {
 }
 
 const getAllFiles = (dirPath, arrayOfFiles) => {
-  const files = readdirSync(dirPath);
-  files.forEach((file) => {
-    const fullPath = path.join(dirPath, file);
-    if (isFolder(fullPath)) {
-      console.log('cai no if')
-      arrayOfFiles.push(getAllFiles(fullPath, arrayOfFiles));
-    } else {
-      arrayOfFiles.push(fullPath);
-    }
-  });
-  return arrayOfFiles;
+  try {
+    const files = readdirSync(dirPath);
+    files.forEach((fileName) => {
+      const fullPath = path.join(dirPath, fileName);
+      isFolder(fullPath) ? arrayOfFiles.push(getAllFiles(fullPath, arrayOfFiles)) : arrayOfFiles.push(fullPath);
+    });
+    return arrayOfFiles;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 const mdLinks = (folderPath) => {
   try {
     const directoryTree = getAllFiles(folderPath, []);
-    console.log(directoryTree);
     const files = directoryTree.filter((doc) => typeof doc === 'string');
+    console.log(directoryTree);
     console.log(files);
     files.forEach((file) => {
       console.log(file);
