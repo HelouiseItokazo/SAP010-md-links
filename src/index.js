@@ -31,6 +31,7 @@ const mdLinks = (folderPath) => {
   try {
     const directoryTree = getAllFiles(folderPath, []);
     const files = directoryTree.filter((doc) => typeof doc === 'string');
+    const fullLinkOnlyRegex = /\[([^\[]+)\](\(.*\))/gm;
     console.log(directoryTree);
     console.log(files);
     files.forEach((file) => {
@@ -39,6 +40,8 @@ const mdLinks = (folderPath) => {
       if (isDotMd(file)) {
         readFile(file, 'utf8', (error, data) => {
           if (error) throw error;
+          const matchFullLink = data.match(fullLinkOnlyRegex);
+          console.log(matchFullLink);
           console.log(`FILE NAME: ${file}`);
           console.log(`CONTENT: ${data}`);
         });
