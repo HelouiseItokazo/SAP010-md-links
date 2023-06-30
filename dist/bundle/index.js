@@ -1,6 +1,6 @@
 "use strict";
 
-import { mdLinks } from "../../index.js";
+import { mdLinks } from "../../bin/index.js";
 
 module.exports = () => {
   mdLinks

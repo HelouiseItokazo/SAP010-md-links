@@ -8,7 +8,7 @@
     "dev": "babel index.js -d dist/bundle.js"
   },
   "bin": {
-    "md-links": "index.js"
+    "md-links": "./bin/index.js"
   },
   "type": "module",
   "bootcamp": {
@@ -29,7 +29,7 @@
     "helouiseitokazo-md-links": "^0.1.0"
   },
   "description": "* [1. Prefácio](#1-prefácio)\r * [2. Resumo do projeto](#2-resumo-do-projeto)\r * [3. Objetivos de aprendizagem](#3-objetivos-de-aprendizagem)\r * [4. Considerações gerais](#4-considerações-gerais)\r * [5. Critérios de aceitação mínimos do projeto](#5-criterios-de-aceitação-mínimos-do-projeto)\r * [6. Entregáveis](#6-entregáveis)\r * [7. Hacker edition](#7-hacker-edition)\r * [8. Guias, dicas e leituras complementares](#8-guias-dicas-e-leituras-complementares)\r * [9. Checklist](#9-checklist)\r * [10. Dividindo o problema - babies steps](#10-dividindo-o-problema)",
-  "main": "index.js",
+  "main": "./bin/index.js",
   "directories": {
     "test": "test"
   },
@@ -42,7 +42,7 @@
     ".md"
   ],
   "author": "Helouíse Itokazo",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/HelouiseItokazo/SAP010-md-links/issues"
   },
