@@ -7,6 +7,9 @@
   "scripts": {
     "dev": "babel index.js -d dist/bundle.js"
   },
+  "bin": {
+    "md-links": "./bin/index.js"
+  },
   "type": "module",
   "bootcamp": {
     "createdAt": "2023-06-19T12:25:44.680Z",
