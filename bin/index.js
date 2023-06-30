@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+import './mod.js';
 
 import {
   lstatSync,
@@ -29,7 +30,7 @@ const getAllFiles = (dirPath, arrayOfFiles) => {
   }
 }
 
-const mdLinks = (folderPath) => {
+export const mdLinks = (folderPath) => {
   try {
     const directoryTree = getAllFiles(folderPath, []);
     const files = directoryTree.filter((doc) => typeof doc === 'string');
@@ -62,10 +63,6 @@ const mdLinks = (folderPath) => {
   } catch (error) {
     console.log(error.message);
   }
-}
-
-module.exports = {
-  mdLinks,
 }
 
 /*
