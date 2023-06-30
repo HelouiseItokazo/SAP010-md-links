@@ -51,9 +51,7 @@ const mdLinks = (folderPath) => {
                 }
                 links.push(objFile);
               })
-              for (const data in links) {
-                resolve(console.log(`${links[data].file}  ${links[data].text}  ${links[data].url}`));
-              }
+              resolve(links);
             }
           });
         }
@@ -64,4 +62,19 @@ const mdLinks = (folderPath) => {
   }
 }
 
-mdLinks('target_dir');
+module.exports = {
+  mdLinks,
+}
+
+/*
+for (const data in links) {
+  let printFile = links[data].file.substring(0, 51);
+  // printFile = printFile.substring(0, 51);
+  let printText = links[data].text.substring(0, 51);
+  // printText = printText.substring(0, 51);
+  let printUrl = links[data].url.substring(0, 51);
+  // printUrl = printUrl.substring(0, 51);
+  const printData = `${printFile}  ${printText}  ${printUrl}`;
+  console.log(printData);
+}
+*/
