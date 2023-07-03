@@ -14,7 +14,7 @@ const isDotMd = (fileName) => {
   return path.extname(fileName) === '.md';
 }
 
-const getAllFiles = (dirPath, arrayOfFiles) => {
+export const getAllFiles = (dirPath, arrayOfFiles) => {
   try {
     const files = readdirSync(dirPath);
     files.forEach((fileName) => {
@@ -31,9 +31,15 @@ const getAllFiles = (dirPath, arrayOfFiles) => {
   }
 }
 
-const readContentFile = (pathFile) => {
+const readContentFile = (pathFile, isPathFolder) => {
+  // const fullLinkOnlyRegex = /\[([^\[]+)\](\(.*\))/gm;
   const fullLinkOnlyRegex = /\[([^\[]+)\](\(.*\))/gm;
-  const filesDotMd = pathFile.filter(isDotMd);
+  let filesDotMd = '';
+  if(isPathFolder){
+    filesDotMd = pathFile.filter(isDotMd);
+  } else {
+    filesDotMd = [pathFile].filter(isDotMd);
+  }
   const links = [];
   const readFilePromise = (file) => {
     return new Promise((resolve, reject) => {
@@ -46,7 +52,7 @@ const readContentFile = (pathFile) => {
         matchFullLink.forEach((data)=> {
           const url = data[2].toString().match(/\(([^)]+)\)/);
           const objFile = {
-            file,
+            path: file,
             label: data[1].substring(0, 51),
             url: url[1]
           }
@@ -65,10 +71,26 @@ const readContentFile = (pathFile) => {
 }
 
 export const mdLinks = (folderPath) => {
-  return new Promise((resolve, reject) => {
-    const directoryTree = getAllFiles(folderPath, []);
-    const pathFile = directoryTree.filter((doc) => typeof doc === 'string');
-    readContentFile(pathFile)
+  console.log(folderPath)
+  const isPathFolder = isFolder(folderPath);
+  if(isPathFolder){
+    console.log('TRUE')
+    return new Promise((resolve, reject) => {
+      const directoryTree = getAllFiles(folderPath, []);
+      const pathFile = directoryTree.filter((doc) => typeof doc === 'string');
+      readContentFile(pathFile, isPathFolder)
+        .then((links) => {
+          resolve(links);
+        })
+        .catch((error) => {
+          console.log(error.message);
+          reject(error);
+        });
+    });
+  } else {
+    console.log('FALSE')
+    return new Promise((resolve, reject) => {
+      readContentFile(folderPath, isPathFolder)
       .then((links) => {
         resolve(links);
       })
@@ -76,5 +98,6 @@ export const mdLinks = (folderPath) => {
         console.log(error.message);
         reject(error);
       });
-  });
+    })
+  }
 }

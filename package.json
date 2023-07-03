@@ -5,7 +5,10 @@
     "node": ">=16.x"
   },
   "scripts": {
-    "dev": "babel bin/index.js --out-file public/bundle.js"
+    "dev": "babel bin/index.js --out-file public/bundle.js",
+    "test": "jest",
+    "eslint": "eslint *.js test/",
+    "pretest": "npm run eslint"
   },
   "bin": {
     "md-links": "cli.js"
@@ -21,11 +24,15 @@
     "@babel/core": "^7.22.5",
     "@babel/plugin-transform-modules-commonjs": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
-    "@types/node": "^20.3.2"
+    "@types/node": "^20.3.2",
+    "babel-jest": "^29.5.0",
+    "core-js": "3.4",
+    "eslint": "^8.44.0",
+    "eslint-plugin-jest": "^27.2.2",
+    "jest": "^29.5.0"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "directory-tree": "^3.5.1",
     "helouiseitokazo-md-links": "^0.1.0"
   },
   "description": "",
