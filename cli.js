@@ -7,21 +7,12 @@ const [, , path] = argv;
 
 mdLinks(path)
   .then((files) => {
-    console.log('-------------------------------------------------------------------------');
-    console.log('ESTOU NO CLI ');
-    console.log('RECEBI O PARAMETRO ' + path);
-
-    console.log(files);
-    /*
     for (const data in files) {
       const printFile = files[data].path;
-      const printText = files[data].text.substring(0, 51);
+      const printText = files[data].label;
       const printUrl = files[data].url;
       const printData = `${printFile}  ${printText}  ${printUrl}`;
       console.log(printData);
     }
-    */
-    console.log('SAÍ DO CLI ');
-    console.log('-------------------------------------------------------------------------');
   })
   .catch((error) => console.log(error.message));
