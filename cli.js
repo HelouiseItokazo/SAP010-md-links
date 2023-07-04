@@ -3,10 +3,10 @@
 import { mdLinks } from './index.js';
 import { argv } from 'node:process';
 
-const [, , path, optionsArgV] = argv;
+const [, , path, optionsArgv] = argv;
 
-const checkOptions = (optionsArgV) => {
-  switch (options) {
+const checkOptions = (optionsArgv) => {
+  switch (optionsArgv) {
     case '--validate':
       return {validate: true};
     case '--stats':
@@ -22,17 +22,10 @@ const checkOptions = (optionsArgV) => {
   }
 }
 
-const options = checkOptions(optionsArgV);
+const options = checkOptions(optionsArgv);
 
 mdLinks(path, options)
   .then((files) => {
-    console.log(options)
-    for (const data in files) {
-      const printFile = files[data].path;
-      const printText = files[data].label;
-      const printUrl = files[data].url;
-      const printData = `${printFile}  ${printText}  ${printUrl}`;
-      console.log(printData);
-    }
+   files.forEach((file) => console.log(file))
   })
   .catch((error) => console.log(error.message));
