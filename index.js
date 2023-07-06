@@ -7,7 +7,6 @@ import {
 import * as path from 'path';
 
 import axios from 'axios';
-import { resolve } from 'node:path';
 
 const isFolder = (dirPath) => {
   return lstatSync(dirPath).isDirectory();
@@ -93,7 +92,7 @@ const requestHttp = (httpLink, doc) => {
 const validateLinks = (files) => {
   let response = []
   const validatePromise = (files) => {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       readFileAndExtractLinks(files)
         .then((docs) => {
           response = docs.map((doc) => requestHttp(doc.url, doc));
@@ -114,14 +113,32 @@ const validateLinks = (files) => {
     });
 }
 
-
+const statsLink = (files) => {
+  return new Promise((resolve, reject) => {
+    validateLinks(files)
+      .then((file) => {
+        const total = file.length
+        const links = file.map((doc) => doc.url);
+        const unique = new Set(links).size;
+        file.push({
+          total,
+          unique
+        })
+        resolve(file)
+      })
+      .catch((error) => {
+        console.log(error.message)
+        reject(error)
+      })
+  })
+}
 
 export const mdLinks = (folderPath, options) => {
   const files = isFolder(folderPath) ? getAllFiles(folderPath, []) : [folderPath];
   if (options.validate) {
     return validateLinks(files);
-  } else if (options.stats){
-    return;
+  } else if (options.stats) {
+    return statsLink(files);
   }
   return readFileAndExtractLinks(files);
 };
