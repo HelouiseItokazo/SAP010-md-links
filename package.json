@@ -6,7 +6,7 @@
   },
   "scripts": {
     "dev": "babel bin/index.js --out-file public/bundle.js",
-    "test": "jest",
+    "test": "jest --coverage",
     "eslint": "eslint *.js test/",
     "pretest": "npm run eslint"
   },

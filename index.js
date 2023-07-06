@@ -6,7 +6,8 @@ import {
 
 import * as path from 'path';
 
-// import axios from 'axios';
+import axios from 'axios';
+import { resolve } from 'node:path';
 
 const isFolder = (dirPath) => {
   return lstatSync(dirPath).isDirectory();
@@ -29,31 +30,10 @@ const getAllFiles = (dirPath, arrayOfFiles) => {
   }
 }
 
-/*
-const requestHttp = (httpLink, objFile) => {
-  return new Promise((resolve, reject) => {
-    axios.get(httpLink)
-      .then((resp) => {
-        const statusCode = resp.status;
-        let msg = '';
-        statusCode > 399 ? msg = 'Fail!' : msg = 'Ok!'
-        objFile.statusCode = statusCode;
-        objFile.msg = msg;
-        resolve(objFile);
-      })
-      .catch((error) => {
-        console.log(error.message);
-        reject(error);
-      });
-  });
-}
-*/
-
 const extractLinks = (data, file) => {
-  console.log(file)
   const fullLinkOnlyRegex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
   return [...data.matchAll(fullLinkOnlyRegex)]
-  .map((match) => {
+    .map((match) => {
       const label = match[1].substring(0, 51);
       const url = match[2];
       return {
@@ -80,21 +60,68 @@ const readFile = (file) => {
 const readFileAndExtractLinks = (pathFiles) => {
   const promises = pathFiles.filter(isDotMd).map((file) => {
     return readFile(file)
-      .then((data) => extractLinks(data, file))
+      .then((data) => (extractLinks(data, file)))
       .catch((error) => {
         console.log(error.message);
-        throw error;
       });
   });
   return Promise.all(promises)
     .then((results) => results.flat())
     .catch((error) => {
       console.log(error.message);
-      throw error;
     });
 };
 
+const requestHttp = (httpLink, doc) => {
+  return new Promise((resolve, reject) => {
+    axios.get(httpLink)
+      .then((resp) => {
+        const statusCode = resp.status;
+        let msg = '';
+        statusCode > 399 ? msg = 'Fail!' : msg = 'Ok!';
+        doc.statusCode = statusCode;
+        doc.msg = msg;
+        resolve(doc);
+      })
+      .catch((error) => {
+        console.log(error.message);
+        reject(error);
+      });
+  });
+}
+
+const validateLinks = (files) => {
+  let response = []
+  const validatePromise = (files) => {
+    new Promise((resolve, reject) => {
+      readFileAndExtractLinks(files)
+        .then((docs) => {
+          response = docs.map((doc) => requestHttp(doc.url, doc));
+          resolve(response);
+        })
+        .catch((error) => {
+          console.log(error.message);
+          reject(error)
+        });
+    })
+  }
+  const httpPromises = validatePromise(files);
+  return Promise.all([httpPromises])
+    .then(() => Promise.all(response))
+    .then((results) => results.flat())
+    .catch((error) => {
+      console.log(error.message);
+    });
+}
+
+
+
 export const mdLinks = (folderPath, options) => {
   const files = isFolder(folderPath) ? getAllFiles(folderPath, []) : [folderPath];
+  if (options.validate) {
+    return validateLinks(files);
+  } else if (options.stats){
+    return;
+  }
   return readFileAndExtractLinks(files);
 };
