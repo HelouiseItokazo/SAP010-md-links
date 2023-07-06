@@ -83,8 +83,14 @@ const requestHttp = (httpLink, doc) => {
         resolve(doc);
       })
       .catch((error) => {
-        console.log(error.message);
-        reject(error);
+        if (error.code === 'ENOTFOUND') {
+          doc.statusCode = 404; // Not Found
+          doc.msg = 'Not Found';
+          resolve(doc);
+        } else {
+          console.log(error.message);
+          reject(error);
+        }
       });
   });
 }
@@ -121,8 +127,8 @@ const statsLink = (files) => {
         const links = file.map((doc) => doc.url);
         const unique = new Set(links).size;
         file.push({
-          total,
-          unique
+          total},
+         { unique
         })
         resolve(file)
       })
@@ -133,12 +139,37 @@ const statsLink = (files) => {
   })
 }
 
+const brokenLinks = (files) => {
+  return new Promise((resolve, reject) => {
+    statsLink(files)
+    .then((file) => {
+      const brokenUrls = file.filter((doc) => doc.statusCode > 399);
+      const broken = brokenUrls.length;
+      file.filter((doc) => {
+        if(doc.unique){
+          doc.unique -= broken;
+        }
+      })
+      file.push({
+        broken,
+      })
+      resolve(file);
+    }).catch((error) => {
+      console.log(error.message);
+      reject(error);
+    })
+  })
+}
+
+
 export const mdLinks = (folderPath, options) => {
   const files = isFolder(folderPath) ? getAllFiles(folderPath, []) : [folderPath];
-  if (options.validate) {
-    return validateLinks(files);
+  if (options.validate && options.stats) {
+    return brokenLinks(files);
   } else if (options.stats) {
     return statsLink(files);
+  } else if (options.validate) {
+    return validateLinks(files);
   }
   return readFileAndExtractLinks(files);
 };

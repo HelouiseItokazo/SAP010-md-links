@@ -10,7 +10,18 @@ const checkOptions = (path, optionsArgv) => {
     validate: false,
     stats: false
   }
-  if (optionsArgv === '--validate') {
+  if (argv.includes('--validate') && argv.includes('--stats')) {
+    options.validate = true;
+    options.stats = true;
+    console.log('mix');
+    mdLinks(path, options)
+    .then((files) => {
+      console.log('CLI')
+      files.forEach((file) => console.log(file))
+    })
+    .catch((error) => console.log(error.message));
+  }
+  else if (optionsArgv === '--validate') {
     options.validate = true;
     mdLinks(path, options)
     .then((files) => {
