@@ -20,11 +20,7 @@ const checkOptions = (path, optionsArgv) => {
     .catch((error) => console.log(error.message));
   } else if (optionsArgv === '--stats') {
     options.stats = true;
-    mdLinks(path, options)
-    .then((files) => {
-      console.log('CLI')
-      files.forEach((file) => console.log(file))
-    })
+    mdLinks(path, options).then((files) => console.log('CLI', files))
     .catch((error) => console.log(error.message));
   } else if (path) {
     mdLinks(path, options)
