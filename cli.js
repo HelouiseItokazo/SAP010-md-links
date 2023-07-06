@@ -3,36 +3,37 @@
 import { mdLinks } from './index.js';
 import { argv } from 'node:process';
 
-const [, , path, optionsArgV] = argv;
+const [, , path, optionsArgv] = argv;
 
-const checkOptions = (optionsArgV) => {
-  switch (options) {
-    case '--validate':
-      return {validate: true};
-    case '--stats':
-      return {stats: true}
-    case undefined:
-      break;
-    default:
-    console.log(`Parametros inválidos:
-    Tente:
-      --validate,
-      --stats,
-      --validate --stats`);
+const checkOptions = (path, optionsArgv) => {
+  const options = {
+    validate: false,
+    stats: false
+  }
+  if (optionsArgv === '--validate') {
+    options.validate = true;
+    mdLinks(path, options)
+    .then((files) => {
+      console.log('CLI')
+      files.forEach((file) => console.log(file))
+    })
+    .catch((error) => console.log(error.message));
+  } else if (optionsArgv === '--stats') {
+    options.stats = true;
+    mdLinks(path, options)
+    .then((files) => {
+      console.log('CLI')
+      files.forEach((file) => console.log(file))
+    })
+    .catch((error) => console.log(error.message));
+  } else if (path) {
+    mdLinks(path, options)
+      .then((files) => {
+        files.forEach((file) => console.log(file))
+      })
+      .catch((error) => console.log(error.message));
   }
 }
 
-const options = checkOptions(optionsArgV);
+const options = checkOptions(path, optionsArgv);
 
-mdLinks(path, options)
-  .then((files) => {
-    console.log(options)
-    for (const data in files) {
-      const printFile = files[data].path;
-      const printText = files[data].label;
-      const printUrl = files[data].url;
-      const printData = `${printFile}  ${printText}  ${printUrl}`;
-      console.log(printData);
-    }
-  })
-  .catch((error) => console.log(error.message));
