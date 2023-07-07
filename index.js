@@ -8,15 +8,15 @@ import * as path from 'path';
 
 import axios from 'axios';
 
-const isFolder = (dirPath) => {
+export const isFolder = (dirPath) => {
   return lstatSync(dirPath).isDirectory();
-}
+};
 
-const isDotMd = (fileName) => {
+export const isDotMd = (fileName) => {
   return path.extname(fileName) === '.md';
-}
+};
 
-const getAllFiles = (dirPath, arrayOfFiles) => {
+export const getAllFiles = (dirPath, arrayOfFiles) => {
   try {
     const files = readdirSync(dirPath);
     files.forEach((fileName) => {
@@ -27,9 +27,9 @@ const getAllFiles = (dirPath, arrayOfFiles) => {
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
-const extractLinks = (data, file) => {
+export const extractLinks = (data, file) => {
   const fullLinkOnlyRegex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
   return [...data.matchAll(fullLinkOnlyRegex)]
     .map((match) => {
@@ -39,13 +39,14 @@ const extractLinks = (data, file) => {
         file,
         label,
         url
-      }
-    })
-}
+      };
+    });
+};
 
-const readFile = (file) => {
+export const readFile = (file) => {
   return new Promise((resolve, reject) => {
     readFileCallback(file, 'utf8', (error, data) => {
+      //error ? reject(error) : resolve (data);
       if (error) {
         console.log(error.message);
         reject(error);
@@ -56,7 +57,7 @@ const readFile = (file) => {
   });
 };
 
-const readFileAndExtractLinks = (pathFiles) => {
+export const readFileAndExtractLinks = (pathFiles) => {
   const promises = pathFiles.filter(isDotMd).map((file) => {
     return readFile(file)
       .then((data) => (extractLinks(data, file)))
@@ -71,7 +72,7 @@ const readFileAndExtractLinks = (pathFiles) => {
     });
 };
 
-const requestHttp = (httpLink, doc) => {
+export const requestHttp = (httpLink, doc) => {
   return new Promise((resolve, reject) => {
     axios.get(httpLink)
       .then((resp) => {
@@ -93,10 +94,10 @@ const requestHttp = (httpLink, doc) => {
         }
       });
   });
-}
+};
 
 const validateLinks = (files) => {
-  let response = []
+  let response = [];
   const validatePromise = (files) => {
     return new Promise((resolve, reject) => {
       readFileAndExtractLinks(files)
@@ -106,10 +107,10 @@ const validateLinks = (files) => {
         })
         .catch((error) => {
           console.log(error.message);
-          reject(error)
+          reject(error);
         });
-    })
-  }
+    });
+  };
   const httpPromises = validatePromise(files);
   return Promise.all([httpPromises])
     .then(() => Promise.all(response))
@@ -117,50 +118,46 @@ const validateLinks = (files) => {
     .catch((error) => {
       console.log(error.message);
     });
-}
+};
 
 const statsLink = (files) => {
   return new Promise((resolve, reject) => {
     validateLinks(files)
       .then((file) => {
-        const total = file.length
+        const total = file.length;
         const links = file.map((doc) => doc.url);
         const unique = new Set(links).size;
-        file.push({
-          total},
-         { unique
-        })
-        resolve(file)
+        file.push({total}, {unique});
+        resolve(file);
       })
       .catch((error) => {
-        console.log(error.message)
-        reject(error)
-      })
-  })
-}
+        console.log(error.message);
+        reject(error);
+      });
+  });
+};
 
 const brokenLinks = (files) => {
   return new Promise((resolve, reject) => {
     statsLink(files)
-    .then((file) => {
-      const brokenUrls = file.filter((doc) => doc.statusCode > 399);
-      const broken = brokenUrls.length;
-      file.filter((doc) => {
-        if(doc.unique){
-          doc.unique -= broken;
-        }
-      })
-      file.push({
-        broken,
-      })
-      resolve(file);
-    }).catch((error) => {
-      console.log(error.message);
-      reject(error);
-    })
-  })
-}
-
+      .then((file) => {
+        const brokenUrls = file.filter((doc) => doc.statusCode > 399);
+        const broken = brokenUrls.length;
+        file.filter((doc) => {
+          if (doc.unique) {
+            doc.unique -= broken;
+          }
+        });
+        file.push({
+          broken,
+        });
+        resolve(file);
+      }).catch((error) => {
+        console.log(error.message);
+        reject(error);
+      });
+  });
+};
 
 export const mdLinks = (folderPath, options) => {
   const files = isFolder(folderPath) ? getAllFiles(folderPath, []) : [folderPath];
