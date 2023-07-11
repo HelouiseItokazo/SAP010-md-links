@@ -46,13 +46,7 @@ export const extractLinks = (data, file) => {
 export const readFile = (file) => {
   return new Promise((resolve, reject) => {
     readFileCallback(file, 'utf8', (error, data) => {
-      //error ? reject(error) : resolve (data);
-      if (error) {
-        console.log(error.message);
-        reject(error);
-      } else {
-        resolve(data);
-      }
+      error ? reject(error) : resolve (data);
     });
   });
 };
