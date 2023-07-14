@@ -685,5 +685,5 @@ nas promessas.
 ### Cenário 1: apenas com o parâmetro path
 **Pré-requisito:** inserir uma path válida.
 
-![Optional Text](./images/teste.png)
+![Optional Text](./images/diagrama1.png)
 
