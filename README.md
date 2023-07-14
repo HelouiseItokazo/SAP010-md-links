@@ -685,4 +685,5 @@ nas promessas.
 ### Cenário 1: apenas com o parâmetro path
 **Pré-requisito:** inserir uma path válida.
 
-![Optional Text](./images/diagramas2.drawio.svg)
+![Optional Text](./images/teste.png)
+
