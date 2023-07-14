@@ -682,4 +682,7 @@ conta própria usando **new Promise()**
 É importante que você saiba o que é um **callback** porque serão usadas
 nas promessas.
 
-![Optional Text](./images/md_links_parameter_path.png)
+### Cenário 1: apenas com o parâmetro path
+**Pré-requisito:** inserir uma path válida.
+
+![Optional Text](./images/diagramas2.drawio.svg)
