@@ -6,39 +6,34 @@ import chalk from 'chalk';
 
 const [, , path, optionsArgv] = argv;
 
-const options = {
-  validate: false,
-  stats: false
-};
 if (argv.includes('--validate') && argv.includes('--stats')) {
-  options.validate = true;
-  options.stats = true;
-  mdLinks(path, options)
+  mdLinks(path, { validate: true, stats: true })
     .then((files) => {
-      for (let i = 0; i < files.length; i++) {
-        if (i <= files.length - 4) {
-          console.log(chalk.bold.magenta('Path:  ') + chalk.magenta(files[i].file));
-          console.log(chalk.bold.yellow('About: ') + chalk.yellow(files[i].label));
-          console.log(chalk.bold.blueBright('Link:  ') + chalk.underline.blueBright(files[i].url));
-          console.log(chalk.bold.greenBright('Status:  ') + chalk.underline.greenBright(files[i].statusCode));
-          console.log(chalk.bold.gray('Msg:  ') + chalk.underline.gray(files[i].msg) + '\n\n');
-        } else if (i > files.length - 4 && i < files.length - 2) {
-          console.log(chalk.bold.green('Total:  ') + chalk.green(files[i].total));
-        } else if (i > files.length - 3 && i < files.length - 1) {
-          console.log(chalk.bold.gray('Unique: ') + chalk.gray(files[i].unique));
-        } else {
-          console.log(chalk.bold.red('Broken: ') + chalk.red(files[i].broken));
+      if (files.length === 3) {
+        console.log('O Arquivo não pode ser lido!');
+        console.log('Verifique se a extensão é .md');
+      } else {
+        for (let i = 0; i < files.length; i++) {
+          if (i <= files.length - 4) {
+            console.log(chalk.bold.magenta('Path:  ') + chalk.magenta(files[i].file));
+            console.log(chalk.bold.yellow('About: ') + chalk.yellow(files[i].label));
+            console.log(chalk.bold.blueBright('Link:  ') + chalk.underline.blueBright(files[i].url));
+            console.log(chalk.bold.greenBright('Status:  ') + chalk.underline.greenBright(files[i].statusCode));
+            console.log(chalk.bold.gray('Msg:  ') + chalk.underline.gray(files[i].msg) + '\n\n');
+          } else if (i > files.length - 4 && i < files.length - 2) {
+            console.log(chalk.bold.green('Total:  ') + chalk.green(files[i].total));
+          } else if (i > files.length - 3 && i < files.length - 1) {
+            console.log(chalk.bold.gray('Unique: ') + chalk.gray(files[i].unique));
+          } else {
+            console.log(chalk.bold.red('Broken: ') + chalk.red(files[i].broken));
+          }
         }
       }
     })
     .catch((error) => console.log(error.message));
-}
-else if (optionsArgv === '--validate') {
-  options.validate = true;
-  mdLinks(path, options)
+} else if (optionsArgv === '--validate') {
+  mdLinks(path, { validate: true })
     .then((files) => {
-      console.log(options);
-      console.log(files);
       files.forEach((file) => {
         if (file.statusCode > 399) {
           console.log(chalk.bold.italic.magentaBright('Path:    ') + chalk.magenta(file.file));
@@ -57,29 +52,31 @@ else if (optionsArgv === '--validate') {
     })
     .catch((error) => console.log(error.message));
 } else if (optionsArgv === '--stats') {
-  options.stats = true;
-  mdLinks(path, options)
+  mdLinks(path, { stats: true })
     .then((files) => {
-      console.log(files);
-      for (let i = 0; i < files.length; i++) {
-        if (i <= files.length - 3) {
-          console.log(chalk.bold.magenta('Path:  ') + chalk.magenta(files[i].file));
-          console.log(chalk.bold.yellow('About: ') + chalk.yellow(files[i].label));
-          console.log(chalk.bold.blueBright('Link:  ') + chalk.underline.blueBright(files[i].url));
-          console.log(chalk.bold.greenBright('Status:  ') + chalk.underline.greenBright(files[i].statusCode));
-          console.log(chalk.bold.gray('Msg:  ') + chalk.underline.gray(files[i].msg) + '\n\n');
-        } else if (i > files.length - 3 && i < files.length - 1) {
-          console.log(chalk.bold.green('Total:  ') + chalk.green(files[i].total));
-        } else if (i > files.length - 2) {
-          console.log(chalk.bold.gray('Unique: ') + chalk.gray(files[i].unique));
+      if (files.length === 2) {
+        console.log('O Arquivo não pode ser lido!');
+        console.log('Verifique se a extensão é .md');
+      } else {
+        for (let i = 0; i < files.length; i++) {
+          if (i <= files.length - 3) {
+            console.log(chalk.bold.magenta('Path:  ') + chalk.magenta(files[i].file));
+            console.log(chalk.bold.yellow('About: ') + chalk.yellow(files[i].label));
+            console.log(chalk.bold.blueBright('Link:  ') + chalk.underline.blueBright(files[i].url));
+            console.log(chalk.bold.greenBright('Status:  ') + chalk.underline.greenBright(files[i].statusCode));
+            console.log(chalk.bold.gray('Msg:  ') + chalk.underline.gray(files[i].msg) + '\n\n');
+          } else if (i > files.length - 3 && i < files.length - 1) {
+            console.log(chalk.bold.green('Total:  ') + chalk.green(files[i].total));
+          } else if (i > files.length - 2) {
+            console.log(chalk.bold.gray('Unique: ') + chalk.gray(files[i].unique));
+          }
         }
       }
     })
     .catch((error) => console.log(error.message));
 } else if (path) {
-  mdLinks(path, options)
+  mdLinks(path, { validate: false, stats: false })
     .then((files) => {
-      console.log(files);
       files.forEach((file) => {
         console.log(chalk.bold.magenta('Path:  ') + chalk.magenta(file.file));
         console.log(chalk.bold.yellow('Label: ') + chalk.yellow(file.label));

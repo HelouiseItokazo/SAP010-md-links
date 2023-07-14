@@ -17,36 +17,36 @@ import {
 describe('mdLinks', () => {
   describe('isFolder', () => {
     it('Deveria retornar true se a path recebida for do tipo Pasta/Diretório', () => {
-      const result = isFolder('./target_dir');
+      const result = isFolder('./test/mock/target_dir');
       expect(result).toBe(true);
     });
     it('Deveria retornar false se a path recebida for do tipo Arquivo', () => {
-      const result = isFolder('./target_dir/file.md');
+      const result = isFolder('./test/mock/target_dir/file.md');
       expect(result).toBe(false);
     });
   });
   describe('isDotMd', () => {
     it('Deveria retornar true se a path recebida terminar com a extensão .md', () => {
-      const result = isDotMd('./target_dir/file.md');
+      const result = isDotMd('./test/mock/target_dir/file.md');
       expect(result).toBe(true);
     });
     it('Deveria retornar false se a path recebida for um diretório', () => {
-      const result = isDotMd('./target_dir');
+      const result = isDotMd('./test/mock/target_dir');
       expect(result).toBe(false);
     });
   });
   describe('getAllFiles', () => {
     it('Deveria retornar todos os diretórios de uma path relativa', () => {
       const arrayOfFiles = [
-        'target_dir\\child_dir\\doc2.md',
-        'target_dir\\child_dir\\test_dir\\abc.md',
-        'target_dir\\doc.md',
-        'target_dir\\file.md',
-        'target_dir\\file1.txt',
-        'target_dir\\file2.html',
-        'target_dir\\fileTest.md',
+        'test\\mock\\target_dir\\child_dir\\doc2.md',
+        'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
+        'test\\mock\\target_dir\\doc.md',
+        'test\\mock\\target_dir\\file.md',
+        'test\\mock\\target_dir\\file1.txt',
+        'test\\mock\\target_dir\\file2.html',
+        'test\\mock\\target_dir\\fileTest.md',
       ];
-      const result = getAllFiles('./target_dir', []);
+      const result = getAllFiles('./test/mock/target_dir', []);
       expect(result).toEqual(arrayOfFiles);
     });
   });
@@ -84,44 +84,44 @@ manipulam texto (GitHub, fórum, blogs e etc) e é muito comum encontrar arquivo
 com este formato em qualquer repositório (começando pelo tradicional
 \`README.md\`).
 `;
-      const result = readFile('./target_dir/file.md');
+      const result = readFile('./test/mock/target_dir/file.md');
       await expect(result).resolves.toBe(resultExpect);
     });
   });
   describe('readFileAndExtractLinks', () => {
-    it('', async () => {
+    it('deveria ler e extrair os links de dentro do arquivo .md', async () => {
       const pathFiles = [
-        'target_dir\\child_dir\\doc2.md',
-        'target_dir\\child_dir\\test_dir\\abc.md',
-        'target_dir\\doc.md',
-        'target_dir\\file.md',
-        'target_dir\\file1.txt',
-        'target_dir\\file2.html',
-        'target_dir\\fileTest.md'
+        'test\\mock\\target_dir\\child_dir\\doc2.md',
+        'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
+        'test\\mock\\target_dir\\doc.md',
+        'test\\mock\\target_dir\\file.md',
+        'test\\mock\\target_dir\\file1.txt',
+        'test\\mock\\target_dir\\file2.html',
+        'test\\mock\\target_dir\\fileTest.md'
       ];
       const resultExpect = [
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Sobre Node.js - Documentação oficial',
           url: 'https://nodejs.org/pt-br/about/'
         },
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Node.js file system - Documentação oficial',
           url: 'https://nodejs.org/api/fs.html'
         },
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Node.js http.get - Documentação oficial',
           url: 'https://nodejs.org/api/http.html#http_http_get_options_callback'
         },
         {
-          file: 'target_dir\\file.md',
+          file: 'test\\mock\\target_dir\\file.md',
           label: 'Markdown',
           url: 'https://pt.wikipedia.org/wiki/Markdown'
         },
         {
-          file: 'target_dir\\file.md',
+          file: 'test\\mock\\target_dir\\file.md',
           label: 'Markdown',
           url: 'https://pt.wikipppppppppppppg/wiki/Markdown'
         }
@@ -138,32 +138,32 @@ com este formato em qualquer repositório (começando pelo tradicional
       };
       const resultExpect = [
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Sobre Node.js - Documentação oficial',
           url: 'https://nodejs.org/pt-br/about/'
         },
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Node.js file system - Documentação oficial',
           url: 'https://nodejs.org/api/fs.html'
         },
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Node.js http.get - Documentação oficial',
           url: 'https://nodejs.org/api/http.html#http_http_get_options_callback'
         },
         {
-          file: 'target_dir\\file.md',
+          file: 'test\\mock\\target_dir\\file.md',
           label: 'Markdown',
           url: 'https://pt.wikipedia.org/wiki/Markdown'
         },
         {
-          file: 'target_dir\\file.md',
+          file: 'test\\mock\\target_dir\\file.md',
           label: 'Markdown',
           url: 'https://pt.wikipppppppppppppg/wiki/Markdown'
         }
       ];
-      const result = await mdLinks('./target_dir', options);
+      const result = await mdLinks('./test/mock/target_dir', options);
       expect(result).toEqual(resultExpect);
     });
   });
@@ -209,42 +209,42 @@ com este formato em qualquer repositório (começando pelo tradicional
     it('deveria encontrar e ler arquivos .md de forma recursiva e fazer requisições http', async () => {
       const resultExpect = [
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Sobre Node.js - Documentação oficial',
           url: 'https://nodejs.org/pt-br/about/',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Node.js file system - Documentação oficial',
           url: 'https://nodejs.org/api/fs.html',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Node.js http.get - Documentação oficial',
           url: 'https://nodejs.org/api/http.html#http_http_get_options_callback',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\file.md',
+          file: 'test\\mock\\target_dir\\file.md',
           label: 'Markdown',
           url: 'https://pt.wikipedia.org/wiki/Markdown',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\file.md',
+          file: 'test\\mock\\target_dir\\file.md',
           label: 'Markdown',
           url: 'https://pt.wikipppppppppppppg/wiki/Markdown',
           statusCode: 404,
           msg: 'Not Found'
         }
       ];
-      const result = await mdLinks('./target_dir', {validate: true});
+      const result = await mdLinks('./test/mock/target_dir', {validate: true});
       expect(result).toStrictEqual(resultExpect);
     });
   });
@@ -252,35 +252,35 @@ com este formato em qualquer repositório (começando pelo tradicional
     it('deveria encontrar e ler arquivos .md de forma recursiva e contabilizar total de links e links únicos', async () => {
       const resultExpect = [
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Sobre Node.js - Documentação oficial',
           url: 'https://nodejs.org/pt-br/about/',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Node.js file system - Documentação oficial',
           url: 'https://nodejs.org/api/fs.html',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Node.js http.get - Documentação oficial',
           url: 'https://nodejs.org/api/http.html#http_http_get_options_callback',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\file.md',
+          file: 'test\\mock\\target_dir\\file.md',
           label: 'Markdown',
           url: 'https://pt.wikipedia.org/wiki/Markdown',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\file.md',
+          file: 'test\\mock\\target_dir\\file.md',
           label: 'Markdown',
           url: 'https://pt.wikipppppppppppppg/wiki/Markdown',
           statusCode: 404,
@@ -289,7 +289,7 @@ com este formato em qualquer repositório (começando pelo tradicional
         { total: 5 },
         { unique: 5 }
       ];
-      const result = await mdLinks('./target_dir', {stats: true});
+      const result = await mdLinks('./test/mock/target_dir', {stats: true});
       expect(result).toStrictEqual(resultExpect);
     });
   });
@@ -297,35 +297,35 @@ com este formato em qualquer repositório (começando pelo tradicional
     it('deveria encontrar e ler arquivos .md de forma recursiva e contabilizar total de links, links únicos e quebrados', async () => {
       const resultExpect = [
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Sobre Node.js - Documentação oficial',
           url: 'https://nodejs.org/pt-br/about/',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Node.js file system - Documentação oficial',
           url: 'https://nodejs.org/api/fs.html',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\child_dir\\test_dir\\abc.md',
+          file: 'test\\mock\\target_dir\\child_dir\\test_dir\\abc.md',
           label: 'Node.js http.get - Documentação oficial',
           url: 'https://nodejs.org/api/http.html#http_http_get_options_callback',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\file.md',
+          file: 'test\\mock\\target_dir\\file.md',
           label: 'Markdown',
           url: 'https://pt.wikipedia.org/wiki/Markdown',
           statusCode: 200,
           msg: 'Ok!'
         },
         {
-          file: 'target_dir\\file.md',
+          file: 'test\\mock\\target_dir\\file.md',
           label: 'Markdown',
           url: 'https://pt.wikipppppppppppppg/wiki/Markdown',
           statusCode: 404,
@@ -335,8 +335,14 @@ com este formato em qualquer repositório (começando pelo tradicional
         { unique: 4 },
         { broken: 1 }
       ];
-      const result = await mdLinks('./target_dir', {validate: true, stats: true});
+      const result = await mdLinks('./test/mock/target_dir', {validate: true, stats: true});
       expect(result).toStrictEqual(resultExpect);
+    });
+  });
+  describe('mdlinks com parametro: path inexistente', () => {
+    it('deveria retornar um array vazio', async () => {
+      const result = await mdLinks('./lkkkkkkkk', {validate: false, stats: false});
+      expect(result).toStrictEqual([]);
     });
   });
 });
