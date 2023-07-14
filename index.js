@@ -9,8 +9,13 @@ import * as path from 'path';
 import axios from 'axios';
 
 export const isFolder = (dirPath) => {
-  return lstatSync(dirPath).isDirectory();
+  try{
+    return lstatSync(dirPath).isDirectory();
+  } catch(error){
+    error.code === 'ENOENT' ? console.log('Path inválida!') : console.log(error.message);
+  }
 };
+// D:/Helouise/CursosEUniversidades/Laboratoria/projetos/mdLikns/SAP010-md-links/target_dir/file1.txt
 
 export const isDotMd = (fileName) => {
   return path.extname(fileName) === '.md';
@@ -46,7 +51,7 @@ export const extractLinks = (data, file) => {
 export const readFile = (file) => {
   return new Promise((resolve, reject) => {
     readFileCallback(file, 'utf8', (error, data) => {
-      error ? reject(error) : resolve (data);
+      error ? reject(error) : resolve(data);
     });
   });
 };
@@ -79,7 +84,7 @@ export const requestHttp = (httpLink, doc) => {
       })
       .catch((error) => {
         if (error.code === 'ENOTFOUND') {
-          doc.statusCode = 404; // Not Found
+          doc.statusCode = 404;
           doc.msg = 'Not Found';
           resolve(doc);
         } else {
@@ -121,7 +126,7 @@ const statsLink = (files) => {
         const total = file.length;
         const links = file.map((doc) => doc.url);
         const unique = new Set(links).size;
-        file.push({total}, {unique});
+        file.push({ total }, { unique });
         resolve(file);
       })
       .catch((error) => {
