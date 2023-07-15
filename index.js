@@ -85,7 +85,7 @@ export const requestHttp = (httpLink, doc) => {
       .catch((error) => {
         if (error.code === 'ENOTFOUND') {
           doc.statusCode = 404;
-          doc.msg = 'Not Found';
+          doc.msg = 'Fail!';
           resolve(doc);
         } else {
           console.log(error.message);
