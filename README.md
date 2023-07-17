@@ -233,4 +233,7 @@ Broken: 1
 
 ## 5. Board com o backlog do produto
 
+![Backlog1](./images/backlog1.png)
+![Backlog2](./images/backlog2.png)
+
 
